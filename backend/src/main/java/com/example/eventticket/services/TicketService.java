@@ -1,18 +1,19 @@
 package com.example.eventticket.services;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.example.eventticket.models.Event;
 import com.example.eventticket.models.Ticket;
 import com.example.eventticket.models.User;
+
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Stateless
 public class TicketService {
-    @PersistenceContext(unitName = "default")
+    @PersistenceContext(unitName = "eventticket-pu")
     private EntityManager em;
 
     public Ticket book(Long userId, Long eventId) {

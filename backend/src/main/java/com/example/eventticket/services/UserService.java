@@ -1,17 +1,18 @@
 package com.example.eventticket.services;
 
+import java.util.List;
+
 import com.example.eventticket.exceptions.UsernameAlreadyTakenException;
 import com.example.eventticket.models.User;
 import com.example.eventticket.utils.JwtUtil;
+
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import java.util.List;
-
 @Stateless
 public class UserService {
-    @PersistenceContext(unitName = "default")
+    @PersistenceContext(unitName = "eventticket-pu")
     private EntityManager em;
 
     public User register(User user) {
@@ -35,7 +36,7 @@ public class UserService {
                 User.class).getResultList();
 
         if (!users.isEmpty()) {
-            User user = users.getFirst();
+            User user = users.get(0);
             return JwtUtil.generateToken(user.getUsername(), user.getRole());
         }
 
