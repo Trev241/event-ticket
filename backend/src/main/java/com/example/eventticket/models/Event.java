@@ -1,33 +1,46 @@
 package com.example.eventticket.models;
 
-import jakarta.persistence.*;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String location;
-    private java.time.LocalDateTime dateTime;
-    private int availableSeats;
+    
+    private String name;
+    private String description;
+    private String venue;
+    private LocalDateTime eventDate;
+    private BigDecimal ticketPrice;
+    private int maxTickets;
+    private int availableTickets;
 
     @ManyToOne
     private User host;
+    
     public Event() {
     }
 
-    public Event(Long id, String title, String location, LocalDateTime dateTime, int availableSeats, User host) {
-        this.id = id;
-        this.title = title;
-        this.location = location;
-        this.dateTime = dateTime;
-        this.availableSeats = availableSeats;
-        this.host = host;
+    public Event(String name, String description, String venue, LocalDateTime eventDate, 
+                 BigDecimal ticketPrice, int maxTickets) {
+        this.name = name;
+        this.description = description;
+        this.venue = venue;
+        this.eventDate = eventDate;
+        this.ticketPrice = ticketPrice;
+        this.maxTickets = maxTickets;
+        this.availableTickets = maxTickets;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -36,36 +49,60 @@ public class Event {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public String getVenue() {
+        return venue;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setVenue(String venue) {
+        this.venue = venue;
     }
 
-    public int getAvailableSeats() {
-        return availableSeats;
+    public LocalDateTime getEventDate() {
+        return eventDate;
     }
 
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public BigDecimal getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(BigDecimal ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public int getMaxTickets() {
+        return maxTickets;
+    }
+
+    public void setMaxTickets(int maxTickets) {
+        this.maxTickets = maxTickets;
+    }
+
+    public int getAvailableTickets() {
+        return availableTickets;
+    }
+
+    public void setAvailableTickets(int availableTickets) {
+        this.availableTickets = availableTickets;
     }
 
     public User getHost() {

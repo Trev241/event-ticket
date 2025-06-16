@@ -24,11 +24,11 @@ public class TicketService {
             throw new RuntimeException("Invalid user or event");
         }
 
-        if (event.getAvailableSeats() <= 0) {
-            throw new RuntimeException("No available seats");
+        if (event.getAvailableTickets() <= 0) {
+            throw new RuntimeException("No available tickets");
         }
 
-        event.setAvailableSeats(event.getAvailableSeats() - 1);
+        event.setAvailableTickets(event.getAvailableTickets() - 1);
         em.merge(event);
 
         Ticket ticket = new Ticket();

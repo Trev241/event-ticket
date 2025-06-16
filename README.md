@@ -16,7 +16,6 @@ docker-compose up --build
 ## Access
 - App: http://localhost:8080
 - API: http://localhost:8080/api
-- pgAdmin: http://localhost:8081
 
 ## Test
 ```bash
