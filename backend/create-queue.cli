@@ -1,0 +1,2 @@
+connect
+jms-queue add --queue-address=NotificationQueue --entries=java:/jms/queue/NotificationQueue
