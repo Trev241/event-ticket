@@ -3,11 +3,13 @@ package com.example.eventticket.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.eventticket.dto.EmailDTO;
 import com.example.eventticket.models.Event;
 import com.example.eventticket.models.Ticket;
 import com.example.eventticket.models.User;
 
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,9 @@ import jakarta.transaction.Transactional;
 public class TicketService {
     @PersistenceContext(unitName = "eventticket-pu")
     private EntityManager em;
+
+    @Inject
+    private EmailService emailService;
 
     @Transactional
     public Ticket book(Long userId, Long eventId, int quantity) {
@@ -70,6 +75,13 @@ public class TicketService {
         ticket.setBookingTime(LocalDateTime.now());
         ticket.setQuantity(quantity);
         ticket.setStatus("CONFIRMED");
+
+        EmailDTO email = new EmailDTO(
+                user.getEmail(),
+                "Ticket Booked",
+                "Hey " + user.getUsername() + ", your ticket has been booked! See you soon ;)"
+        );
+        emailService.sendEmail(email);
 
         em.persist(ticket);
         return ticket;

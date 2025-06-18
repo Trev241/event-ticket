@@ -3,23 +3,24 @@ package com.example.eventticket.services;
 import com.example.eventticket.dto.EmailDTO;
 import jakarta.annotation.Resource;
 import jakarta.ejb.Stateless;
-import jakarta.jms.ConnectionFactory;
-import jakarta.jms.JMSContext;
-import jakarta.jms.ObjectMessage;
-import jakarta.jms.Queue;
+import jakarta.jms.*;
 
 @Stateless
-public class EmailQueueService {
+public class EmailService {
 
-    @Resource(lookup = "jms/NotificationQueue")
+    @Resource(lookup = "java:/jms/queue/NotificationQueue")
     private Queue notificationQueue;
 
     @Resource
     private ConnectionFactory connectionFactory;
 
-    public void sendToNotificationQueue(EmailDTO emailDTO) {
+    public void sendEmail(EmailDTO emailDTO) {
         try (JMSContext context = connectionFactory.createContext()) {
-            ObjectMessage message = context.createObjectMessage(emailDTO);
+            MapMessage message = context.createMapMessage();
+            message.setStringProperty("to", emailDTO.getTo());
+            message.setStringProperty("subject", emailDTO.getSubject());
+            message.setStringProperty("body", emailDTO.getBody());
+
             context.createProducer().send(notificationQueue, message);
             System.out.println("Email message sent to NotificationQueue: " + emailDTO.getTo());
         } catch (Exception e) {
