@@ -15,6 +15,15 @@ public class UserController {
     @Inject
     private UserService userService;
 
+    @GET
+    public Response getUsers(@Context SecurityContext securityContext) {
+        if (!securityContext.isUserInRole("admin")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        return Response.ok(userService.getAllUsers()).build();
+    }
+
     @POST
     @Path("/register")
     public Response createUser(User user) {

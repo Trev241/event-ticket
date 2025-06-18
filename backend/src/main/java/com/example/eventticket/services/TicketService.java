@@ -54,10 +54,11 @@ public class TicketService {
 
         // Check if user already has a ticket for this event (simple business rule)
         List<Ticket> existingTickets = em.createQuery(
-            "SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.event.id = :eventId",
+            "SELECT t FROM Ticket t WHERE t.user.id = :userId AND t.event.id = :eventId AND t.status = :status",
             Ticket.class)
-            .setParameter("userId", userId)
-            .setParameter("eventId", eventId)
+                .setParameter("userId", userId)
+                .setParameter("eventId", eventId)
+                .setParameter("status", "CONFIRMED")
             .getResultList();
 
         if (!existingTickets.isEmpty()) {
@@ -85,11 +86,6 @@ public class TicketService {
 
         em.persist(ticket);
         return ticket;
-    }
-
-    // Overloaded method for backward compatibility
-    public Ticket book(Long userId, Long eventId) {
-        return book(userId, eventId, 1);
     }
 
     public List<Ticket> getAll() {

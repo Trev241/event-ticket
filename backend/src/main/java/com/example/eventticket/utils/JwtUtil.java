@@ -1,4 +1,5 @@
 package com.example.eventticket.utils;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -8,14 +9,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class JwtUtil {
     private static final String SECRET = "secret";
-    private static final long EXPIRATION = 3600_000;
 
-    public static String generateToken(String username, String role) {
+    public static String generateToken(Long userId, String username, String role) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             return JWT.create()
                     .withClaim("username", username)
                     .withClaim("role", role)
+                    .withClaim("userId", userId)
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             // Invalid Signing configuration / Couldn't convert Claims.

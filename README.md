@@ -23,6 +23,7 @@ A comprehensive event ticketing application built with **Jakarta EE 10**, **Wild
 ## 🏃 Quick Start
 
 ### Option 1: Docker (Recommended)
+
 ```bash
 # Navigate to backend directory
 cd backend
@@ -36,6 +37,7 @@ docker run -d --name event-ticket-app -p 8081:8080 event-ticket-backend
 ```
 
 ### Option 2: Local Development
+
 ```bash
 cd backend
 mvn clean package
@@ -45,28 +47,35 @@ mvn clean package
 ## 📋 API Endpoints
 
 ### User Management
+
+Endpoints marked with \* require authentication.
+
 - `POST /api/users/register` - Register new user
 - `POST /api/users/login` - User login
-- `GET /api/users` - Get all users (admin only)
+- `GET /api/users`\* - Get all users (admin only)
 
 ### Event Management
+
 - `POST /api/events` - Create event
 - `GET /api/events` - Get all events
 - `GET /api/events/{id}` - Get specific event
 - `GET /api/events/available` - Get events with available tickets
 
 ### Ticket Management
-- `POST /api/tickets/book` - Book tickets
-- `GET /api/tickets` - Get all tickets
-- `GET /api/tickets/user/{userId}` - Get user's tickets
-- `GET /api/tickets/event/{eventId}` - Get event's tickets
-- `DELETE /api/tickets/{ticketId}/cancel/{userId}` - Cancel ticket
+
+- `POST /api/tickets/book`\* - Book tickets
+- `GET /api/tickets`\* - Get all tickets (admin only)
+- `GET /api/tickets/user`\* - Get user's tickets
+- `GET /api/tickets/event/{eventId}`\* - Get event's tickets (admin only)
+- `DELETE /api/tickets/{ticketId}/cancel`\* - Cancel ticket
+- `DELETE /api/tickets/{ticketId}/cancel/{userId}`\* - Cancel user's ticket (admin only)
 
 ## 🧪 Complete Test Flow Guide
 
 This section provides a comprehensive testing workflow that demonstrates all application features.
 
 ### Prerequisites
+
 ```bash
 # Set base URL for convenience
 export BASE_URL="http://localhost:8081/event-ticket-1.0-SNAPSHOT/api"
@@ -79,18 +88,21 @@ docker ps | grep event-ticket-app
 
 ## 📝 Phase 1: User Flow Testing
 
+_Tests marked with \* require a token_
+
 ### 1.1 User Registration
+
 ```bash
 # Register Admin User
 curl -X POST $BASE_URL/users/register \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123","role":"admin"}'
+  -d '{"username":"admin","email":"admin@test.com","password":"admin123","role":"admin"}'
 # Expected: HTTP 201, user created
 
 # Register Admin User 2 (for event management)
 curl -X POST $BASE_URL/users/register \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin2","password":"admin123","role":"admin"}'
+  -d '{"username":"admin2","email":"admin2@test.com","password":"admin123","role":"admin"}'
 # Expected: HTTP 201, user created
 
 # Register Regular Users
@@ -108,6 +120,7 @@ curl -X POST $BASE_URL/users/register \
 ```
 
 ### 1.2 User Registration Error Testing
+
 ```bash
 # Test duplicate username (should fail)
 curl -X POST $BASE_URL/users/register \
@@ -115,26 +128,15 @@ curl -X POST $BASE_URL/users/register \
   -d '{"username":"admin","password":"different","role":"user"}'
 # Expected: HTTP 400, "User with username admin already exists"
 
-# Test weak password (should fail)
-curl -X POST $BASE_URL/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"weak","password":"123","role":"user"}'
-# Expected: HTTP 400, "Password must be at least 6 characters"
-
 # Test empty username (should fail)
 curl -X POST $BASE_URL/users/register \
   -H "Content-Type: application/json" \
   -d '{"username":"","password":"password123","role":"user"}'
 # Expected: HTTP 400, "Username is required"
-
-# Test invalid role (should fail)
-curl -X POST $BASE_URL/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"invalidrole","password":"password123","role":"host"}'
-# Expected: HTTP 400, "Role must be either 'admin' or 'user'"
 ```
 
 ### 1.3 User Login Testing
+
 ```bash
 # Successful login
 curl -X POST $BASE_URL/users/login \
@@ -156,8 +158,9 @@ curl -X POST $BASE_URL/users/login \
 ```
 
 ### 1.4 View Users
+
 ```bash
-# Get all users
+# Get all users*
 curl -X GET $BASE_URL/users
 # Expected: HTTP 200, array of all registered users
 ```
@@ -167,6 +170,7 @@ curl -X GET $BASE_URL/users
 ## 🎪 Phase 2: Event Flow Testing
 
 ### 2.1 Event Creation
+
 ```bash
 # Create Large Event (100 tickets)
 curl -X POST $BASE_URL/events \
@@ -222,6 +226,7 @@ curl -X POST $BASE_URL/events \
 ```
 
 ### 2.2 Event Creation Error Testing
+
 ```bash
 # Test past date event (should fail)
 curl -X POST $BASE_URL/events \
@@ -277,6 +282,7 @@ curl -X POST $BASE_URL/events \
 ```
 
 ### 2.3 Event Retrieval Testing
+
 ```bash
 # Get all events
 curl -X GET $BASE_URL/events
@@ -302,6 +308,7 @@ curl -X GET $BASE_URL/events/available
 ## 🎫 Phase 3: Ticket Flow Testing
 
 ### 3.1 Successful Ticket Booking
+
 ```bash
 # Test 1: Single ticket booking
 curl -X POST $BASE_URL/tickets/book \
@@ -340,6 +347,7 @@ curl -X POST $BASE_URL/tickets/book \
 ```
 
 ### 3.2 Ticket Booking Error Testing
+
 ```bash
 # Test 6: Duplicate booking (should fail)
 curl -X POST $BASE_URL/tickets/book \
@@ -385,6 +393,9 @@ curl -X POST $BASE_URL/tickets/book \
 ```
 
 ### 3.3 Ticket Retrieval Testing
+
+_A token is required for all these requests_
+
 ```bash
 # Get all tickets
 curl -X GET $BASE_URL/tickets
@@ -393,12 +404,6 @@ curl -X GET $BASE_URL/tickets
 # Get tickets by user
 curl -X GET $BASE_URL/tickets/user/3
 # Expected: HTTP 200, tickets for user1 (should have 1 ticket)
-
-curl -X GET $BASE_URL/tickets/user/4
-# Expected: HTTP 200, tickets for user2 (should have 3 tickets)
-
-curl -X GET $BASE_URL/tickets/user/5
-# Expected: HTTP 200, tickets for user3 (should have 5 tickets)
 
 # Get tickets by event
 curl -X GET $BASE_URL/tickets/event/1
@@ -424,6 +429,7 @@ curl -X GET $BASE_URL/tickets/event/999
 ## ❌ Phase 4: Ticket Cancellation Testing
 
 ### 4.1 Successful Cancellation
+
 ```bash
 # Cancel user1's ticket (ticket ID should be 1)
 curl -X DELETE $BASE_URL/tickets/1/cancel/3
@@ -431,7 +437,7 @@ curl -X DELETE $BASE_URL/tickets/1/cancel/3
 # Tech Summit available tickets should increase to 95
 
 # Verify cancellation worked
-curl -X GET $BASE_URL/tickets/user/3
+curl -X GET $BASE_URL/tickets/user
 # Expected: HTTP 200, ticket status should be "CANCELLED"
 
 curl -X GET $BASE_URL/events/1
@@ -439,6 +445,7 @@ curl -X GET $BASE_URL/events/1
 ```
 
 ### 4.2 Cancellation Error Testing
+
 ```bash
 # Try to cancel someone else's ticket
 curl -X DELETE $BASE_URL/tickets/2/cancel/3
@@ -462,6 +469,7 @@ curl -X DELETE $BASE_URL/tickets/2/cancel/999
 ## 🔍 Phase 5: Final State Verification
 
 ### 5.1 Verify Event States
+
 ```bash
 # Check all events and their available tickets
 curl -X GET $BASE_URL/events
@@ -474,6 +482,7 @@ curl -X GET $BASE_URL/events
 ```
 
 ### 5.2 Verify Ticket States
+
 ```bash
 # Check all tickets and their statuses
 curl -X GET $BASE_URL/tickets
@@ -484,6 +493,7 @@ curl -X GET $BASE_URL/tickets
 ```
 
 ### 5.3 Verify Available Events
+
 ```bash
 # Get only available events
 curl -X GET $BASE_URL/events/available
@@ -498,6 +508,7 @@ curl -X GET $BASE_URL/events/available
 After completing all tests, you should have:
 
 ### Users Created: 5
+
 - admin (ID: 1) - Main admin
 - admin2 (ID: 2) - Event manager admin
 - user1 (ID: 3)
@@ -505,17 +516,20 @@ After completing all tests, you should have:
 - user3 (ID: 5)
 
 ### Events Created: 4
+
 - Tech Summit: 95/100 tickets available
 - Music Festival: 47/50 tickets available
 - Shakespeare: 20/20 tickets available
 - VIP Masterclass: 0/5 tickets available (SOLD OUT)
 
 ### Tickets Booked: 14 total
+
 - 1 cancelled ticket (returned to pool)
 - 13 confirmed tickets
 - Proper quantity and availability tracking
 
 ### Error Scenarios Tested: 15+
+
 - All validation rules working correctly
 - Proper error messages returned
 - Security measures in place

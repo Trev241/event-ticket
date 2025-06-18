@@ -1,25 +1,15 @@
 package com.example.eventticket.dto;
 
 public class BookingRequest {
-    private Long userId;
     private Long eventId;
     private int quantity;
 
     public BookingRequest() {
     }
 
-    public BookingRequest(Long userId, Long eventId, int quantity) {
-        this.userId = userId;
+    public BookingRequest(Long eventId, int quantity) {
         this.eventId = eventId;
         this.quantity = quantity;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Long getEventId() {

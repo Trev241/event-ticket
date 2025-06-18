@@ -37,7 +37,7 @@ public class UserService {
 
         if (!users.isEmpty()) {
             User user = users.get(0);
-            return JwtUtil.generateToken(user.getUsername(), user.getRole());
+            return JwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole());
         }
 
         return null;
