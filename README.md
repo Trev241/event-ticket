@@ -1,48 +1,101 @@
 # 🎫 Event Ticket Management System
 
-A comprehensive event ticketing application built with **Jakarta EE 10**, **WildFly**, and **H2 Database** for educational purposes.
+A comprehensive event ticket management system built with **Java EE (backend)** and **Vue.js (frontend)** featuring a beautiful, responsive UI and complete ticketing functionality.
 
 ## 🚀 Features
 
-- **User Management**: Registration, login with role-based access (Admin, User)
-- **Event Management**: Create, view, and manage events with availability tracking
-- **Ticket Booking**: Book tickets with quantity limits and duplicate prevention
-- **Ticket Cancellation**: Cancel bookings with automatic availability restoration
-- **Security**: Password hashing, input validation, SQL injection prevention
-- **RESTful APIs**: Complete CRUD operations with proper error handling
+### Core Features
+- **🔐 User Authentication & Authorization** - Secure login/register with JWT tokens
+- **🎪 Event Management** - Create, view, and manage events with detailed information
+- **🎫 Ticket Booking System** - Real-time ticket booking with availability tracking
+- **👨‍💼 Admin Dashboard** - Comprehensive admin panel for managing users, events, and tickets
+- **📧 Email Notifications** - Automated email notifications via JMS messaging
+- **📱 Responsive Design** - Beautiful, mobile-friendly UI with Bootstrap 5
+
+### User Roles
+- **Admin**: Full system access, can create events, manage users, and view all tickets
+- **User**: Can browse events, book tickets, and manage their bookings
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Jakarta EE 10, JAX-RS, JPA/Hibernate
-- **Application Server**: WildFly 28
-- **Database**: H2 (in-memory for development)
-- **Build Tool**: Maven
-- **Containerization**: Docker
-- **Java Version**: 17
+### Backend
+- **Java EE 8** - Enterprise Java platform
+- **WildFly 26** - Application server
+- **PostgreSQL 13** - Database
+- **JAX-RS** - REST API framework
+- **JPA/Hibernate** - Object-relational mapping
+- **JMS/ActiveMQ** - Message queuing for notifications
+- **JWT** - JSON Web Token authentication
 
-## 🏃 Quick Start
+### Frontend
+- **Vue.js 3** - Progressive JavaScript framework
+- **Bootstrap 5** - CSS framework for responsive design
+- **Font Awesome** - Icon library
+- **Axios** - HTTP client for API calls
+- **Vue Router** - Client-side routing
 
-### Option 1: Docker (Recommended)
+## 🚀 Getting Started
+
+### Prerequisites
+- **Docker & Docker Compose** (for backend)
+- **Node.js 16+** (for frontend development)
+
+### 1. Running the Backend with Docker
 
 ```bash
-# Navigate to backend directory
-cd backend
+# Clone the repository
+git clone <repository-url>
+cd event-ticket
 
-# Build and run with Docker
-docker build -t event-ticket-backend .
-docker run -d --name event-ticket-app -p 8081:8080 event-ticket-backend
-
-# Access the application
-# API Base: http://localhost:8081/event-ticket-1.0-SNAPSHOT/api
+# Start the backend services
+docker-compose up --build
 ```
 
-### Option 2: Local Development
+**Backend Services:**
+- 🌐 **API**: http://localhost:8080/event-ticket-1.0-SNAPSHOT/api
+- 🔧 **WildFly Admin**: http://localhost:9990
+- 🗄️ **PostgreSQL**: localhost:5432
+
+### 2. Running the Frontend
 
 ```bash
-cd backend
-mvn clean package
-# Deploy the WAR file to your WildFly server
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
+
+**Frontend Access:**
+- 🎨 **Application**: http://localhost:5173
+
+## 📱 Application Features
+
+### 🏠 Home Page
+- Beautiful hero section with gradient design
+- Feature highlights and statistics
+- Call-to-action buttons for registration
+
+### 🎫 Events Management
+- **Browse Events**: Grid view of all available events
+- **Event Details**: Comprehensive event information with booking
+- **Real-time Availability**: Live ticket availability tracking
+- **Filtering**: Show available events only
+
+### 👤 User Dashboard
+- **My Tickets**: Personal ticket management
+- **Booking History**: Complete booking timeline
+- **Ticket Cancellation**: Cancel tickets for future events
+- **Statistics**: Personal booking statistics
+
+### ⚙️ Admin Dashboard
+- **User Management**: View all registered users
+- **Event Management**: Create and manage events
+- **Ticket Management**: View and manage all bookings
+- **System Statistics**: Revenue and usage analytics
 
 ## 📋 API Endpoints
 

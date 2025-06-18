@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/Login.vue'
-import RegisterView from '@/views/Register.vue'
-import NewEventView from '@/views/NewEvent.vue'
+import { authStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,33 +7,58 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LoginView,
+      component: () => import('../views/HomeView.vue')
     },
     {
       path: '/login',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Login.vue'),
+      component: () => import('../views/LoginView.vue')
     },
     {
       path: '/register',
       name: 'register',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: RegisterView,
+      component: () => import('../views/RegisterView.vue')
     },
     {
-      path: '/new-event',
-      name: 'new-event',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: NewEventView,
+      path: '/events',
+      name: 'events',
+      component: () => import('../views/EventsView.vue')
     },
-  ],
+    {
+      path: '/events/:id',
+      name: 'event-detail',
+      component: () => import('../views/EventDetailView.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/create-event',
+      name: 'create-event',
+      component: () => import('../views/CreateEventView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    }
+  ]
+})
+
+// Navigation guards
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next('/login')
+  } else if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next('/')
+  } else {
+    next()
+  }
 })
 
 export default router

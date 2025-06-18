@@ -19,6 +19,9 @@ public class JwtFilter implements ContainerRequestFilter {
     private static final String[] EXCLUDED_ENDPOINTS = {
             "/users/register",
             "/users/login",
+    };
+
+    private static final String[] EXCLUDED_PREFIXES = {
             "/events",
     };
 
@@ -27,11 +30,21 @@ public class JwtFilter implements ContainerRequestFilter {
         // TEMPORARILY DISABLED FOR TESTING
 //        return;
 
-        // Do not filter requests to /users/** endpoints
+        // Do not filter requests to excluded endpoints
         String path = requestContext.getUriInfo().getPath();
+
+        // Check exact matches
         for (String endpoint : EXCLUDED_ENDPOINTS) {
-            System.out.println(path);
+            System.out.println("Checking exact path: " + path + " against " + endpoint);
             if (path.equals(endpoint)) {
+                return;
+            }
+        }
+
+        // Check prefix matches (for endpoints like /events, /events/1, /events/available)
+        for (String prefix : EXCLUDED_PREFIXES) {
+            System.out.println("Checking prefix path: " + path + " against " + prefix);
+            if (path.startsWith(prefix)) {
                 return;
             }
         }
