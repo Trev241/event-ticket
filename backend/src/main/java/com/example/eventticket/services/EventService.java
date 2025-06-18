@@ -57,11 +57,5 @@ public class EventService {
             .getResultList();
     }
 
-    public List<Event> getEventsByHost(Long hostId) {
-        return em.createQuery(
-            "SELECT e FROM Event e WHERE e.host.id = :hostId ORDER BY e.eventDate",
-            Event.class)
-            .setParameter("hostId", hostId)
-            .getResultList();
-    }
+
 }

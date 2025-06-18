@@ -26,9 +26,6 @@ public class Event {
     private BigDecimal ticketPrice;
     private int maxTickets;
     private int availableTickets;
-
-    @ManyToOne
-    private User host;
     
     public Event() {
     }
@@ -107,13 +104,5 @@ public class Event {
 
     public void setAvailableTickets(int availableTickets) {
         this.availableTickets = availableTickets;
-    }
-
-    public User getHost() {
-        return host;
-    }
-
-    public void setHost(User host) {
-        this.host = host;
     }
 }

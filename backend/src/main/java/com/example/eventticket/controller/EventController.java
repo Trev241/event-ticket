@@ -71,16 +71,5 @@ public class EventController {
         }
     }
 
-    @GET
-    @Path("/host/{hostId}")
-    public Response getEventsByHost(@PathParam("hostId") Long hostId) {
-        try {
-            List<Event> events = eventService.getEventsByHost(hostId);
-            return Response.ok(events).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"" + e.getMessage() + "\"}")
-                    .build();
-        }
-    }
+
 }
