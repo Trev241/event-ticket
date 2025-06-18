@@ -3,6 +3,8 @@ package com.example.eventticket.models;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +20,8 @@ public class Event {
     private String name;
     private String description;
     private String venue;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime eventDate;
     private BigDecimal ticketPrice;
     private int maxTickets;
